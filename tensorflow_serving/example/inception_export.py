@@ -86,8 +86,7 @@ def export():
     # Note that the 0th index is an unused background class
     # (see inception model definition code).
     class_descriptions = ['unused background']
-    for s in synsets:
-      class_descriptions.append(texts[s])
+    class_descriptions.extend(texts[s] for s in synsets)
     class_tensor = tf.constant(class_descriptions)
 
     classes = tf.contrib.lookup.index_to_string(tf.to_int64(indices),
@@ -107,10 +106,11 @@ def export():
         #   /my-favorite-path/imagenet_train/model.ckpt-0,
         # extract global_step from it.
         global_step = ckpt.model_checkpoint_path.split('/')[-1].split('-')[-1]
-        print('Successfully loaded model from %s at step=%s.' %
-              (ckpt.model_checkpoint_path, global_step))
+        print(
+            f'Successfully loaded model from {ckpt.model_checkpoint_path} at step={global_step}.'
+        )
       else:
-        print('No checkpoint file found at %s' % FLAGS.checkpoint_dir)
+        print(f'No checkpoint file found at {FLAGS.checkpoint_dir}')
         return
 
       # Export inference model.
@@ -131,7 +131,7 @@ def export():
           default_graph_signature=classification_signature,
           named_graph_signatures=named_graph_signature)
       model_exporter.export(FLAGS.export_dir, tf.constant(global_step), sess)
-      print('Successfully exported model to %s' % FLAGS.export_dir)
+      print(f'Successfully exported model to {FLAGS.export_dir}')
 
 
 def preprocess_image(image_buffer):

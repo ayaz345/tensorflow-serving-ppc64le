@@ -91,7 +91,7 @@ def main(_):
   # in-lined in tutorials, please update tutorial documents accordingly
   # whenever code changes.
   export_path = sys.argv[-1]
-  print('Exporting trained model to %s' % export_path)
+  print(f'Exporting trained model to {export_path}')
   init_op = tf.group(tf.initialize_all_tables(), name='init_op')
   saver = tf.train.Saver(sharded=True)
   model_exporter = exporter.Exporter(saver)
